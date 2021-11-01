@@ -12,10 +12,10 @@ except:
     from tkinter import *
 
 # regex import
-import re
+import re, ipaddress
 
 # function to defang input text
-def Defang(inputText):
+def Defang(inputText, ignorePrivate=True):
     url_candidates = [x[0] for x in re.findall(r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))", inputText)]
     if len(url_candidates) > 0:
         for url in url_candidates:
@@ -31,7 +31,11 @@ def Defang(inputText):
     ip_candidates = re.findall(r"\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b", inputText)
     if len(ip_candidates) > 0:
         for ip in ip_candidates:
-            inputText = inputText.replace(ip, ip.replace(".", "[.]"))
+            if ignorePrivate == False:
+                inputText = inputText.replace(ip, ip.replace(".", "[.]"))
+            else:
+                if not ipaddress.ip_address(ip).is_private:
+                    inputText = inputText.replace(ip, ip.replace(".", "[.]"))
 
     return inputText
 
@@ -39,7 +43,11 @@ def Defang(inputText):
 def DefangPress():
     inputTxt = text.get("1.0","end-1c")
     text.delete("1.0", END)
-    text.insert(END, Defang(inputTxt))
+    if cb.get() == 1:
+        ignorePrivate = True
+    else:
+        ignorePrivate = False
+    text.insert(END, Defang(inputTxt, ignorePrivate))
 
 def CopyPress():
     copyTxt = text.get("1.0","end-1c")
@@ -60,6 +68,10 @@ scroll.pack(side=RIGHT, fill=Y)
 text = Text(screen, yscrollcommand=scroll.set)
 text.pack(expand=1,fill='both')
 text.insert(END, "Paste or enter text here.")
+cb = IntVar()
+cb.set(1)
+checkBox = Checkbutton(screen, text = "Ignore private IP addresses.", variable=cb, onvalue=1, offvalue=0)
+checkBox.pack()
 btn = Button(screen, text = "Defang text", width = 10, command = DefangPress) 
 btn.pack(fill=X)
 btn2 = Button(screen, text = "Copy to clipboard", command = CopyPress)
@@ -69,6 +81,7 @@ btn4.pack(fill=X)
 btn3 = Button(screen, text = "Close", command = Close)
 btn3.pack(fill=X)
 scroll.config(command=text.yview)
+
 
 # start app
 mainloop()
