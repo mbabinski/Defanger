@@ -16,13 +16,13 @@ import re, ipaddress
 
 # function to defang input text
 def Defang(inputText, ignorePrivate=True):
-    url_candidates = [x[0] for x in re.findall(r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?Â«Â»â€œâ€â€˜â€™]))", inputText)]
+    url_candidates = [x[0] for x in re.findall(r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))", inputText)]
     if len(url_candidates) > 0:
         for url in url_candidates:
             inputText = inputText.replace(url, url.replace(".", "[.]"))
         inputText = inputText.replace("http:", "hxxp:").replace("https:", "hxxps:")
 
-    ftp_candidates = [x[0] for x in re.findall(r"(?i)\b((?:ftp?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?Â«Â»â€œâ€â€˜â€™]))", inputText)]
+    ftp_candidates = [x[0] for x in re.findall(r"(?i)\b((?:ftp?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))", inputText)]
     if len(ftp_candidates) > 0:
         for ftp in ftp_candidates:
             inputText = inputText.replace(ftp, ftp.replace(".", "[.]"))
