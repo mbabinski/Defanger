@@ -10,8 +10,8 @@ By default, defanger will ignore (not defang) private IP addresses, although you
 Once you have defanged the input text, you can copy it to the clipboard, clear the defanger, or close using the buttons at the bottom.
 
 ## Example
-Before defanging:
+Before defanging:  
 ![alt text](https://github.com/mbabinski/Defanger/blob/main/Images/BeforeDefang.PNG?raw=true)
 
-After defanging:
+After defanging:  
 ![alt text](https://github.com/mbabinski/Defanger/blob/main/Images/AfterDefang.PNG?raw=true)
